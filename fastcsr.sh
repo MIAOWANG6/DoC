@@ -26,6 +26,7 @@ nthreads=8
 cd /GPFS/cuizaixu_lab_permanent/wangmiao/Fastcsr/
 
 if [ -d $subses_dir ]; then
+    if [ ! -f $bids_root_dir_output/derivatives/fastcsr/$subj$ses/stats/wmparc.stats ];then
     python3 fastcsr_model_infer.py --fastcsr_subjects_dir $SUBJECTS_DIR --subj $subj$ses --hemi lh --suffix orig.nofix
     python3 fastcsr_model_infer.py --fastcsr_subjects_dir $SUBJECTS_DIR --subj $subj$ses --hemi rh --suffix orig.nofix
 
@@ -74,6 +75,6 @@ if [ -d $subses_dir ]; then
 
     recon-all -autorecon3 -subjid $subj$ses
 
-
+    fi
 
 fi
