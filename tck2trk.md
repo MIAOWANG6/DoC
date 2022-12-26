@@ -16,6 +16,8 @@
 
 ## **Use tck2trk**
 
+### `conda env list`
+
 ### `cp -r app-convert-tck-to-trk /GPFS/cuizaixu_lab_permanent/wangmiao/app_packages/`
 
 ![image](https://user-images.githubusercontent.com/52966164/199167019-0519b5af-768c-4560-93f9-dab5f6e3fc1e.png)
