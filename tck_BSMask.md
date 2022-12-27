@@ -1,4 +1,7 @@
 ## 1.将ch2bet模板中画出的BS_MNI2009的模板转换到个体空间
+
+### module load ants
+
 ### antsApplyTransforms --default-value 0 --dimensionality 3 --float 0 --input `BS_Mask_MNI_ch2bet` --interpolation Linear --output `mask_indv.nii.gz` --reference-image `preproc_T1w.nii.gz` --transform `xfm.h5`
 
 
