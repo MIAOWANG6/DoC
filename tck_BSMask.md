@@ -12,6 +12,10 @@
 ### `mrconvert sub-DOC0034_BS_Mask_MNI_icmb15209c.nii.gz sub-DOC0034_BS_Mask_MNI_icmb15209c.mif`
 ### `tckedit sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_space-T1w_desc-tracks_ifod2.tck track_sub-DOC0034_YangYi_BS.tck -include sub-DOC0034_BS_Mask_MNI_icmb15209c.mif`
 
+## 3.制作preproc_T1w与Indv_BS_Mask_MNI_icmb15209c合并的Multi-tissue Mask
+
+
+## 4.下载track_ROI并显示与Overlay
 
 `{
     "tck": "/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/LesionShow/sub-DOC0034_YANGYI/sub-DOC0034_YangYi_Lesion_tracks.tck",
