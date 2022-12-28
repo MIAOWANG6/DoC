@@ -74,5 +74,33 @@
         "dwi": "/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/LesionShow/sub-DOC0034_YANGYI/sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_dwi.nii.gz"
     }
 
+## 4.parallel.sh
+    #!/bin/bash
+    #SBATCH -J ANTS
+    #SBATCH --nodes=1
+    #SBATCH --ntasks=1
+    #SBATCH --ntasks-per-node=2
+    #SBATCH --mem-per-cpu 16000
+    #SBATCH -p q_fat_c
+    
+    module load ants
+    antsApplyTransforms --default-value 0 --dimensionality 3 --float 0 --input Final_BS_Mask_MNI.nii --interpolation NearestNeighbor --output $1_Final_BS_Mask_MNI.nii --reference-image $1_desc-preproc_T1w.nii.gz --transform $1_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5
+    antsApplyTransforms --default-value 0 --dimensionality 3 --float 0 --input BS_Mask_MNI_icbm15209c.nii.gz --interpolation NearestNeighbor --output $1_BS_Mask_MNI.nii --reference-image $1_desc-preproc_T1w.nii.gz --transform $1_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5
+    
+    module load mrtrix3
+    mrconvert $1_BS_Mask_MNI.nii $1_BS_Mask_MNI.mif
+    tckedit $1_$2_space-T1w_desc-preproc_space-T1w_desc-tracks_ifod2.tck track_$1_YangYi_BS.tck -include $1_BS_Mask_MNI.mif
+
+
+
+
+
+
+
+
+
+
+
+
 
 
