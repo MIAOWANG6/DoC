@@ -65,7 +65,7 @@
     
     module load mrtrix3
     mrconvert sub-DOC0034_BS_Mask_MNI.nii sub-DOC0034_BS_Mask_MNI.mif
-    tckedit sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_space-T1w_desc-tracks_ifod2.tck track_sub-DOC0034_YangYi_BS.tck -include sub-DOC0034_BS_Mask_MNI.mif
+    tckedit sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_space-T1w_desc-tracks_ifod2.tck track_sub-DOC0034_YangYi_BS.tck -include sub-DOC0034_BS_Mask_MNI.mif -minlength 220
 
 ## 3.下载track_ROI并显示与Overlay
 
