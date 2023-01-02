@@ -57,6 +57,7 @@
     antsApplyTransforms --default-value 0 --dimensionality 3 --float 0 --input Final_BS_Mask_MNI.nii --interpolation NearestNeighbor --output sub-DOC0034_Final_BS_Mask_MNI.nii --reference-image sub-DOC0034_desc-preproc_T1w.nii.gz --transform sub-DOC0034_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5
 ### 注：必须是NearestNeighbor插值不然会有小数
 ### 注：有的时候会加载gcc/5.5.0，这个有问题，要unload这个module
+### 注：用matlab提交不行！
 
 ![image](https://user-images.githubusercontent.com/52966164/209655397-d9d26c7a-d8db-4f08-96c9-a8c71e6257c5.png)
 
