@@ -66,16 +66,25 @@
     
     module load mrtrix3
     mrconvert sub-DOC0034_BS_Mask_MNI.nii sub-DOC0034_BS_Mask_MNI.mif
+    module unload gcc/5.5.0
     tckedit sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_space-T1w_desc-tracks_ifod2.tck track_sub-DOC0034_YangYi_BS.tck -include sub-DOC0034_BS_Mask_MNI.mif -minlength 220
+    tckedit sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_space-T1w_desc-tracks_ifod2.tck track_sub-DOC0034_YangYi_BS.tck -include sub-DOC0034_BS_Mask_MNI.mif -number 1000
 
-## 3.下载track_ROI并显示与Overlay
-
-    {
-        "tck": "/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/LesionShow/sub-DOC0034_YANGYI/sub-DOC0034_YangYi_Lesion_tracks.tck",
-        "dwi": "/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/LesionShow/sub-DOC0034_YANGYI/sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_dwi.nii.gz"
-    }
-
-## 4.parallel.sh
+## 3-1.parallel.m
+    site_dir = '/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/LesionShow';
+    cd(site_dir);
+    sub_site = dir([site_dir, '/sub-*' ]);
+    num=0;
+    for sub = 4:numel(sub_site)
+        folder_name = sub_site(sub).name;
+        sub_name = folder_name(1:11);
+        copyfile('./antsTrans.sh' ,[sub_site(sub).folder,'/',folder_name]);
+        copyfile('./Final_BS_Mask_MNI.nii' ,[sub_site(sub).folder,'/',folder_name]);
+        copyfile('./BS_Mask_MNI_icbm15209c.nii' ,[sub_site(sub).folder,'/',folder_name]);
+        cd([sub_site(sub).folder,'/',folder_name]);
+    end
+    
+## 3-2.parallel.sh
     #!/bin/bash
     #SBATCH -J ANTS
     #SBATCH --nodes=1
@@ -83,19 +92,30 @@
     #SBATCH --ntasks-per-node=2
     #SBATCH --mem-per-cpu 16000
     #SBATCH -p q_fat_c
-    
     module load ants
-    antsApplyTransforms --default-value 0 --dimensionality 3 --float 0 --input Final_BS_Mask_MNI.nii --interpolation NearestNeighbor --output $1_Final_BS_Mask_MNI.nii --reference-image $1_desc-preproc_T1w.nii.gz --transform $1_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5
-    antsApplyTransforms --default-value 0 --dimensionality 3 --float 0 --input BS_Mask_MNI_icbm15209c.nii.gz --interpolation NearestNeighbor --output $1_BS_Mask_MNI.nii --reference-image $1_desc-preproc_T1w.nii.gz --transform $1_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5
-    
+    module unload gcc/5.5.0
+
+    antsApplyTransforms --default-value 0 --dimensionality 3 --float 0 --input Final_BS_Mask_MNI.nii --interpolation NearestNeighbor --output ${1}_Final_BS_Mask_MNI.nii --reference-image ${1}_desc-preproc_T1w.nii.gz --transform ${1}_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5
+
+    antsApplyTransforms --default-value 0 --dimensionality 3 --float 0 --input BS_Mask_MNI_icbm15209c.nii --interpolation NearestNeighbor --output ${1}_BS_Mask_MNI.nii --reference-image ${1}_desc-preproc_T1w.nii.gz --transform ${1}_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5
+
     module load mrtrix3
-    mrconvert $1_BS_Mask_MNI.nii $1_BS_Mask_MNI.mif
-    tckedit $1_$2_space-T1w_desc-preproc_space-T1w_desc-tracks_ifod2.tck track_$1_YangYi_BS.tck -include $1_BS_Mask_MNI.mif
+
+    mrconvert ${1}_BS_Mask_MNI.nii ${1}_BS_Mask_MNI.mif
+   
+## 3-3.run .sh
+    cd /GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/LesionShow/sub-DOC0034_YANGYI/
+    srun sh antsTrans.sh sub-DOC0034
+
+## 4-1.将tck转为trk文件（可不操作）
+
+    {
+        "tck": "/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/LesionShow/sub-DOC0034_YANGYI/sub-DOC0034_YangYi_Lesion_tracks.tck",
+        "dwi": "/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/LesionShow/sub-DOC0034_YANGYI/sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_dwi.nii.gz"
+    }
 
 
-
-
-
+## 4-2.下载track_ROI并显示与Overlay
 
 
 
