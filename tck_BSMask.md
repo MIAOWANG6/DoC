@@ -67,8 +67,8 @@
     module load mrtrix3
     mrconvert sub-DOC0034_BS_Mask_MNI.nii sub-DOC0034_BS_Mask_MNI.mif
     module unload gcc/5.5.0
-    tckedit sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_space-T1w_desc-tracks_ifod2.tck track_sub-DOC0034_YangYi_BS.tck -include sub-DOC0034_BS_Mask_MNI.mif -minlength 220
-    tckedit sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_space-T1w_desc-tracks_ifod2.tck track_sub-DOC0034_YangYi_BS.tck -include sub-DOC0034_BS_Mask_MNI.mif -number 1000
+    tckedit sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_space-T1w_desc-tracks_ifod2.tck track_sub-DOC0034_BS_minl245.tck -include sub-DOC0034_BS_Mask_MNI.mif -minlength 245
+    tckedit sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_space-T1w_desc-tracks_ifod2.tck track_sub-DOC0034_BS_num200.tck -include sub-DOC0034_BS_Mask_MNI.mif -number 200
 
 ## 3-1.parallel.m
     site_dir = '/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/LesionShow';
@@ -107,17 +107,31 @@
     cd /GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/LesionShow/sub-DOC0034_YANGYI/
     srun sh antsTrans.sh sub-DOC0034
 
-## 4-1.将tck转为trk文件（可不操作）
-
+## 4.将tck转为trk文件（可不操作）
+## 4-1.修改app-convert-tck-to-trk/config.json
     {
         "tck": "/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/LesionShow/sub-DOC0034_YANGYI/sub-DOC0034_YangYi_Lesion_tracks.tck",
         "dwi": "/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/LesionShow/sub-DOC0034_YANGYI/sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_dwi.nii.gz"
     }
 
+## 4-2.run python tck2trk脚本
+    cd /GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/LesionShow/app-convert-tck-to-trk/
+    conda activate tck2trk    
+    srun -p q_fat_c -c 4 python convert_tck_to_trk.py
+    cp track_sub-001.trk /GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/LesionShow/sub-DOC0034_YANGYI/track_sub-DOC0034_BS_220.trk
+    rm track_sub-001.trk
 
-## 4-2.下载track_ROI并显示与Overlay
-
-
+## 5.下载track_ROI并显示与Overlay
+## 5-1. 制作个体被试的两种穿过BS的纤维束
+    cd /GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/LesionShow/sub-DOC0034_YANGYI/
+    tckedit /GPFS/cuizaixu_lab_permanent/wangmiao/DoC/bids_updated/201608_after_75p/derivatives/qsiprep/sub-DOC0034/qsirecon/sub-DOC0034/ses-20170223171421/dwi/sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_space-T1w_desc-tracks_ifod2.tck track_sub-DOC0034_BS_num200.tck -include sub-DOC0034_BS_Mask_MNI.mif -number 200
+    tckedit /GPFS/cuizaixu_lab_permanent/wangmiao/DoC/bids_updated/201608_after_75p/derivatives/qsiprep/sub-DOC0034/qsirecon/sub-DOC0034/ses-20170223171421/dwi/sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_space-T1w_desc-tracks_ifod2.tck track_sub-DOC0034_BS_minl245.tck -include sub-DOC0034_BS_Mask_MNI.mif -minlength 245
+    
+## 5-2.将BrainBS、BS、Lesion的mask都转换为mz3格式
+    nii_nii2atlas('E:\DOC_BS_Stroke\LesionShow\sub-DOC0034_Final_BS_Mask_MNI.nii');
+    nii_nii2atlas('E:\DOC_BS_Stroke\LesionShow\sub-DOC0034_BS_Mask_MNI.nii');
+    nii_nii2atlas('E:\DOC_BS_Stroke\LesionShow\DOC0034-SEG.nii.gz');
+    
 
 
 
