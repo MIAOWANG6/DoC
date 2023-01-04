@@ -4,10 +4,10 @@
 ### 共有18位被试的数据和一个tool文件夹
 ### 注：其他3名被试由于数据质量问题无法得到纤维追踪的结果
 ### 注：excel上另外的被试目前没有原始数据
-![image](https://user-images.githubusercontent.com/52966164/210580479-995edc2f-e0d3-4dda-937d-e246eac06e52.png)
+<img src="https://user-images.githubusercontent.com/52966164/210580479-995edc2f-e0d3-4dda-937d-e246eac06e52.png" width=70% />
 
-# 第一部分：大脑多值mask + 纤维束
-## 1. 打开大脑多值mask
+# 第一部分：大脑多值mask + 纤维束 （第二部分是单独脑干 + 纤维束）
+## 1. 打开大脑多值mask 
 ### 被试文件夹里的文件如图所示
 ![image](https://user-images.githubusercontent.com/52966164/210581422-447467e7-4de1-471c-bf85-1dc6bcf8637a.png)
 ### 打开DOC0034-BrainBS.mz3文件
@@ -20,19 +20,26 @@
 ![image](https://user-images.githubusercontent.com/52966164/210584446-4e6771ec-f9fb-4e3f-83f7-f89da4fc9295.png)
 ### 选择DOC0034-BrainBS.mz3
 ![image](https://user-images.githubusercontent.com/52966164/210584866-97bb920d-9824-450f-8b9b-426f5a4ee0c0.png)
-![image](https://user-images.githubusercontent.com/52966164/210585058-48243585-3f18-454b-abb4-608ba1274252.png)
+
+<img src="https://user-images.githubusercontent.com/52966164/210585058-48243585-3f18-454b-abb4-608ba1274252.png" width=50% />
 
 ## 2. 调整大脑多值mask
 ### 2-1. 调整截面
 ![image](https://user-images.githubusercontent.com/52966164/210585593-8e6a1a38-6134-4a63-bc11-97a8bdd2efcd.png)
+
 ### 将以上参数调整到如下图所示
 ### 其中depth是指切割面深度，Azimuth是值绕垂直轴(z轴)切割面的角度，elevation是值绕水平轴(x轴)切割面的角度
 ![image](https://user-images.githubusercontent.com/52966164/210585809-15e1b393-5431-4023-98e2-c83d827fd8d2.png)
+
 ![image](https://user-images.githubusercontent.com/52966164/210585843-4ad1b953-549a-48aa-bf15-e625f63a09c8.png)
+
 ### 如果想看横截面而不是矢状面的界面，可以将参数调整如下图所示
 ![image](https://user-images.githubusercontent.com/52966164/210587117-02489745-402f-4de2-95f9-4cb35a96e33a.png)
+
 ![image](https://user-images.githubusercontent.com/52966164/210587147-8f8b751d-2104-4fdd-b811-bb9506261ff6.png)
+
 ![image](https://user-images.githubusercontent.com/52966164/210587221-13d1e8bb-a517-4d60-a1a5-e6a5cdba91ff.png)
+
 ![image](https://user-images.githubusercontent.com/52966164/210587267-18a7456a-ced2-4727-8490-b9a8d927d179.png)
 
 ### 2-2. 调整透明度
@@ -46,7 +53,9 @@
 ### 注：一定要选择对应被试的文件夹，打开对应被试的数据！很容易忘记选这个被试的文件夹，而是在上一个被试文件夹选择数据
 ### 如果要关闭病灶，点击工具栏overlays-Close overlays
 ![image](https://user-images.githubusercontent.com/52966164/210588038-9e1d1337-b729-4c51-af91-17cd0aad4508.png)
+
 ![image](https://user-images.githubusercontent.com/52966164/210588425-b2e18809-e83b-495f-b3ba-3cde6de5a48a.png)
+
 ![image](https://user-images.githubusercontent.com/52966164/210588990-68b01e51-4c61-4c75-975f-da8d0570f7be.png)
 
 ## 4. 添加第一种纤维束
@@ -54,7 +63,9 @@
 ### 打开病灶数据，点击工具栏Tracks-Add tracks，打开track_sub-DOC0034_BS_num200.tck文件
 ### 注：一定要选择对应被试的文件夹，打开对应被试的数据！很容易忘记选这个被试的文件夹，而是在上一个被试文件夹选择数据
 ![image](https://user-images.githubusercontent.com/52966164/210589454-d69f27e5-dae7-4702-83cb-016ca26b585d.png)
+
 ![image](https://user-images.githubusercontent.com/52966164/210590180-c614efa4-7725-4be0-9adb-6486769989d8.png)
+
 ![image](https://user-images.githubusercontent.com/52966164/210590294-a2404202-29d0-4039-9d88-aedabdb4fedf.png)
 
 ## 4-2. 调整纤维束
@@ -62,7 +73,9 @@
 ![image](https://user-images.githubusercontent.com/52966164/210590549-05314a5e-aebf-4dc4-ac97-eb84412d613d.png)
 ### 将以上参数调整到如下图所示
 ![image](https://user-images.githubusercontent.com/52966164/210590635-71a3cd62-3705-45c9-9c47-95126a564f6e.png)
+
 ![image](https://user-images.githubusercontent.com/52966164/210590713-b331995e-85e7-4b44-8518-8abd3bd9e548.png)
+
 ### 注：只有对于number 200筛选出的纤维数据才要把length调到最小，这个选项是在筛选长度大于特定值的纤维束。由于number200筛选的纤维束文件纤维数目少，不需要进一步筛选。
 
 ## 5. 添加第二种纤维束
@@ -71,6 +84,7 @@
 ### 打开病灶数据，点击工具栏Tracks-Add tracks，打开track_sub-DOC0034_BS_minl245.tck文件
 ### 注：一定要选择对应被试的文件夹，打开对应被试的数据！很容易忘记选这个被试的文件夹，而是在上一个被试文件夹选择数据
 ![image](https://user-images.githubusercontent.com/52966164/210592640-fc46d318-e850-4482-a205-3864b5b1fa2d.png)
+
 ![image](https://user-images.githubusercontent.com/52966164/210592521-f3cc6ae9-cb7a-4197-85ff-334995a34d19.png)
 
 ## 5-2. 调整纤维束
@@ -79,6 +93,7 @@
 ### 将以上参数调整到如下图所示
 ### 注：对于minl245筛选出的纤维数据需要把length调到最大或比较大，因为minl245筛选出的纤维一般很多，会挡住视线。
 ![image](https://user-images.githubusercontent.com/52966164/210592788-e2ad24ee-be41-437c-9092-62bc030b319b.png)
+
 ![image](https://user-images.githubusercontent.com/52966164/210592849-da711d2b-9067-4952-9011-cbe6414ceacf.png)
 
 
@@ -99,6 +114,7 @@
 
 ### 将以上参数调整到如下图所示
 ![image](https://user-images.githubusercontent.com/52966164/210595008-54d969b7-578f-4fe7-97a4-16c1fc43bd7c.png)
+
 ![image](https://user-images.githubusercontent.com/52966164/210597158-63b23459-d39f-4bfb-8733-1ae0c27117e4.png)
 
 ### 2-2. 调整角度
@@ -110,6 +126,7 @@
 ### 将以上参数调整到如下图所示
 ### 其中depth是指切割面深度，Azimuth是值绕垂直轴(z轴)切割面的角度，elevation是值绕水平轴(x轴)切割面的角度
 ![image](https://user-images.githubusercontent.com/52966164/210585809-15e1b393-5431-4023-98e2-c83d827fd8d2.png)
+
 ![image](https://user-images.githubusercontent.com/52966164/210595505-0ba59bd5-2df6-4785-afc9-0c7f413c1abb.png)
 
 ### 如果想看横截面而不是矢状面的界面，可以将参数调整如下图所示
