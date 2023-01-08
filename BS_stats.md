@@ -14,9 +14,13 @@
     tensor2metric -fa fa.nii.gz sub-DOC0034_dti.nii
     fslmaths fa.nii.gz -mul sub-DOC0034_ses-20170223171421_space-T1w_desc-brain_mask.nii.gz fa_mr
 
-### 脑干纤维束参数基于voxel的DTI
+### 脑干纤维束参数基于voxel的TDI
     tckmap tdi -template sub-DOC0034_BS_Mask_MNI.nii track_sub-DOC0034_BS.tck sub-DOC0034_BS_in.nii
 
 ### Lesion体积
-    fslstats DOC0060.nii.gz -V
+    fslstats sub-DOC0034.nii.gz -V
+    fslmaths sub-DOC0034.nii.gz -mul sub-DOC0034_BS_Mask_MNI.nii sub-DOC0034_Lesion_inBS
+    fslstats sub-DOC0034_Lesion_inBS.nii.gz -V
+    
+    
     fslstats track_sub-DOC0060_BS_minl245.nii.gz -V
