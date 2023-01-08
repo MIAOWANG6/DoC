@@ -8,7 +8,7 @@
 ### 方式一：
     module load fsl
     dtifit -k sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_dwi.nii.gz -o fa_fsl -m sub-DOC0034_ses-20170223171421_space-T1w_desc-brain_mask.nii.gz -r sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_dwi.bvec -b sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_dwi.bval
-fslmaths fa.nii.gz -mul sub-DOC0034_ses-20170223171421_space-T1w_desc-brain_mask.nii.gz fa_mr
+    fslmaths fa.nii.gz -mul sub-DOC0034_ses-20170223171421_space-T1w_desc-brain_mask.nii.gz fa_mr
 ### 方式二：
     dwi2tensor sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_dwi.nii.gz sub-DOC0034_dti.nii -fslgrad sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_dwi.bvec sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_dwi.bval
     tensor2metric -fa fa.nii.gz sub-DOC0034_dti.nii
