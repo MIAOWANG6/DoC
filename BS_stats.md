@@ -24,3 +24,37 @@
     
     
     fslstats track_sub-DOC0060_BS_minl245.nii.gz -V
+
+### parallel.sh
+    #!/bin/bash
+    #SBATCH -J ANTS
+    #SBATCH --nodes=1
+    #SBATCH --ntasks=1
+    #SBATCH --ntasks-per-node=2
+    #SBATCH --mem-per-cpu 16000
+    #SBATCH -p q_fat_c
+    
+    module load fsl
+    module load ants
+    module load mrtrix3
+    module unload gcc/5.5.0
+    
+    #get needed files
+    #bvec\bval\dwi\mask\tck\lesion\bs_mif
+    
+    site=$2
+    qsi_dir=$site
+    sub_dir=/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/BSStats/${1}
+    
+    echo ${1} >>/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/BSStats/metrics.txt
+    tckstats $sub_dir/track_${1}_BS.tck >>/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/BSStats/metrics.txt
+    tckstats $sub_dir/track_${1}_BS.tck -histogram $sub_dir/hist -force
+    
+    cd sub_dir
+    bval=$(ls ${1}_*_space-T1w_desc-preproc_dwi.bval)
+    bvec=$(ls ${1}_*_space-T1w_desc-preproc_dwi.bvec)
+    mask=$(ls ${1}_*_space-T1w_desc-brain_mask.nii.gz)
+    dwi=$(ls ${1}_*_space-T1w_desc-preproc_dwi.nii.gz)
+    dtifit -k $dwi -o fsl_ -m $mask -r $bvec -b $bval
+    
+    
