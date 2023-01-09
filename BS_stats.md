@@ -65,9 +65,15 @@
     #get TDI
     tckmap tdi -template $mask track_${1}_BS.tck ${1}_BS_tdi.nii
     
+    #get tracts体积
+    echo BS_tracts_volume: >>/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/BSStats/metrics.txt
+    fslstats ${1}_BS_tdi.nii -V >>/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/BSStats/metrics.txt
+    
     # Lesion体积
+    echo Lesion_volume: >>/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/BSStats/metrics.txt
     fslstats ${1}.nii.gz -V >>/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/BSStats/metrics.txt
     fslmaths ${1}.nii.gz -mul ${1}_BS_Mask_MNI.nii ${1}_Lesion_inBS
+    echo Lesion_inBS_volume: >>/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/BSStats/metrics.txt
     fslstats ${1}_Lesion_inBS.nii.gz -V >>/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/BSStats/metrics.txt
     
     
