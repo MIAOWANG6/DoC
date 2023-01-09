@@ -8,7 +8,6 @@
 ### 方式一：
     module load fsl
     dtifit -k sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_dwi.nii.gz -o fa_fsl -m sub-DOC0034_ses-20170223171421_space-T1w_desc-brain_mask.nii.gz -r sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_dwi.bvec -b sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_dwi.bval
-    fslmaths fa.nii.gz -mul sub-DOC0034_ses-20170223171421_space-T1w_desc-brain_mask.nii.gz fa_mr
 ### 方式二：
     dwi2tensor sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_dwi.nii.gz sub-DOC0034_dti.nii -fslgrad sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_dwi.bvec sub-DOC0034_ses-20170223171421_space-T1w_desc-preproc_dwi.bval
     tensor2metric -fa fa.nii.gz sub-DOC0034_dti.nii
@@ -41,20 +40,35 @@
     
     #get needed files
     #bvec\bval\dwi\mask\tck\lesion\bs_mif
-    
+        
     site=$2
-    qsi_dir=$site
+    tck_dir=/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/bids_updated/${site}/derivatives/qsiprep/${1}/qsiprep/${1}/ses-*/dwi
+    dwi_dir=/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/bids_updated/${site}/derivatives/qsiprep/${1}/qsirecon/${1}/ses-*/dwi
     sub_dir=/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/BSStats/${1}
-    
+    tck=$(ls ${tck_dir}/${1}_ses-*_space-T1w_desc-preproc_space-T1w_desc-tracks_ifod2.tck)
+    bval=$(ls ${dwi_dir}/${1}_*_space-T1w_desc-preproc_dwi.bval)
+    bvec=$(ls ${dwi_dir}/${1}_*_space-T1w_desc-preproc_dwi.bvec)
+    mask=$(ls ${dwi_dir}/${1}_*_space-T1w_desc-brain_mask.nii.gz)
+    dwi=$(ls ${dwi_dir}/${1}_*_space-T1w_desc-preproc_dwi.nii.gz)
+        
+    #get BS whole tracts
+    cd $sub_dir
+    mif=${1}_BS_Mask_MNI.mif
+    tckedit $tck track_${1}_BS.tck -include $mif
+  
+    #get BS whole tracts
     echo ${1} >>/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/BSStats/metrics.txt
     tckstats $sub_dir/track_${1}_BS.tck >>/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/BSStats/metrics.txt
     tckstats $sub_dir/track_${1}_BS.tck -histogram $sub_dir/hist -force
-    
-    cd sub_dir
-    bval=$(ls ${1}_*_space-T1w_desc-preproc_dwi.bval)
-    bvec=$(ls ${1}_*_space-T1w_desc-preproc_dwi.bvec)
-    mask=$(ls ${1}_*_space-T1w_desc-brain_mask.nii.gz)
-    dwi=$(ls ${1}_*_space-T1w_desc-preproc_dwi.nii.gz)
     dtifit -k $dwi -o fsl_ -m $mask -r $bvec -b $bval
+    
+    #get TDI
+    tckmap tdi -template $mask track_${1}_BS.tck ${1}_BS_tdi.nii
+    
+    # Lesion体积
+    fslstats ${1}.nii.gz -V >>/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/BSStats/metrics.txt
+    fslmaths ${1}.nii.gz -mul ${1}_BS_Mask_MNI.nii ${1}_Lesion_inBS
+    fslstats ${1}_Lesion_inBS.nii.gz -V >>/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/BSStats/metrics.txt
+    
     
     
