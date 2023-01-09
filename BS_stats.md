@@ -39,21 +39,23 @@
     module unload gcc/5.5.0
     
     #get needed files
-    #bvec\bval\dwi\mask\tck\lesion\bs_mif
+    #bs_mask\bvec\bval\dwi\mask\tck\lesion\bs_mif
         
     site=$2
     tck_dir=/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/bids_updated/${site}/derivatives/qsiprep/${1}/qsiprep/${1}/ses-*/dwi
     dwi_dir=/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/bids_updated/${site}/derivatives/qsiprep/${1}/qsirecon/${1}/ses-*/dwi
+    Lshow_dir=/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/LesionShow/${1}_*/
     sub_dir=/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/BSStats/${1}
     tck=$(ls ${tck_dir}/${1}_ses-*_space-T1w_desc-preproc_space-T1w_desc-tracks_ifod2.tck)
     bval=$(ls ${dwi_dir}/${1}_*_space-T1w_desc-preproc_dwi.bval)
     bvec=$(ls ${dwi_dir}/${1}_*_space-T1w_desc-preproc_dwi.bvec)
     mask=$(ls ${dwi_dir}/${1}_*_space-T1w_desc-brain_mask.nii.gz)
     dwi=$(ls ${dwi_dir}/${1}_*_space-T1w_desc-preproc_dwi.nii.gz)
+    mif=$(ls ${Lshow_dir}/${1}_BS_Mask_MNI.mif)
+    bs_mask=$(ls ${Lshow_dir}/${1}_BS_Mask_MNI.nii)
         
     #get BS whole tracts
     cd $sub_dir
-    mif=${1}_BS_Mask_MNI.mif
     tckedit $tck track_${1}_BS.tck -include $mif
   
     #get BS whole tracts
@@ -72,7 +74,7 @@
     # Lesion体积
     echo Lesion_volume: >>/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/BSStats/metrics.txt
     fslstats ${1}.nii.gz -V >>/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/BSStats/metrics.txt
-    fslmaths ${1}.nii.gz -mul ${1}_BS_Mask_MNI.nii ${1}_Lesion_inBS
+    fslmaths ${1}.nii.gz -mul $bs_mask ${1}_Lesion_inBS
     echo Lesion_inBS_volume: >>/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/BSStats/metrics.txt
     fslstats ${1}_Lesion_inBS.nii.gz -V >>/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/BSStats/metrics.txt
     
