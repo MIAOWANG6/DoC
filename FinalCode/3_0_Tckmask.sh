@@ -4,7 +4,7 @@
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=2
 #SBATCH --mem-per-cpu 16000
-#SBATCH -p q_fat_l
+#SBATCH -p q_fat_c
 
 module load fsl
 module load afni
