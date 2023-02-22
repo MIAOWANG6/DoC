@@ -1,0 +1,82 @@
+#!/bin/bash
+#SBATCH -J ANTS
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=2
+#SBATCH --mem-per-cpu 16000
+#SBATCH -p q_cn
+#SBATCH -o job.%j.log
+#SBATCH -e job.%j.err
+
+module load fsl
+module load ants
+module load mrtrix3
+module unload parallel
+module unload gcc/5.5.0
+
+sub=$1   
+out_dir=/ibmgpfs/cuizaixu_lab/wangmiao/DoC/Brain_Stem_Connectivity/5-Hierarchy/2-net_FA
+in_dir1=/ibmgpfs/cuizaixu_lab/wangmiao/DoC/Brain_Stem_Connectivity/1-BS_basic/2-bs_stats/$sub
+in_dir2=/ibmgpfs/cuizaixu_lab/wangmiao/DoC/Brain_Stem_Connectivity/3-BS_23tracts/0-tract23_mask/$sub
+in_dir3=/ibmgpfs/cuizaixu_lab/wangmiao/DoC/Brain_Stem_Connectivity/3-BS_23tracts/1-tract23_stats/$sub
+in_dir4=/ibmgpfs/cuizaixu_lab/wangmiao/DoC/Brain_Stem_Connectivity/5-Hierarchy/$sub
+data_dir=/ibmgpfs/cuizaixu_lab/wangmiao/DoC/Brain_Stem_Connectivity/Data_22/$sub
+les_dir=/ibmgpfs/cuizaixu_lab/wangmiao/DoC/Brain_Stem_Connectivity/LesionMask
+trksmask_dir=/GPFS/cuizaixu_lab_permanent/wangmiao/DoC/Brain_Stem_Connectivity/Materials/all_bn_atlas_mask
+networks_dir=/ibmgpfs/cuizaixu_lab/wangmiao/DoC/Brain_Stem_Connectivity/5-Hierarchy/Schaefer2018-7networks-mask
+#data
+xfm_MNI_ind=$(ls ${data_dir}/${sub}_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5)
+xfm_ind_MNI=$(ls ${data_dir}/${sub}_from-T1w_to-MNI152NLin2009cAsym_mode-image_xfm.h5)
+t1=$(ls ${data_dir}/${sub}_*T1w.nii.gz)
+mask=$(ls ${data_dir}/${sub}_*mask.nii.gz)
+bval=$(ls ${data_dir}/${sub}_*.bval)
+bvec=$(ls ${data_dir}/${sub}_*.bvec)
+dwi=$(ls ${data_dir}/${sub}_*dwi.nii.gz)
+json=$(ls ${data_dir}/${sub}_*.b)
+tck=$(ls ${data_dir}/${sub}_*.tck)
+les=$(ls ${les_dir}/${sub}.nii.gz)
+#input
+fa=$(ls $in_dir1/fa_fsl*FA.nii.gz)
+md=$(ls $in_dir1/fa_fsl*MD.nii.gz)
+BS_mask_redwi=$(ls $in_dir1/${sub}_BS_Mask_redwi_MNI.nii)
+#output
+if [ ! -d $out_dir/${sub} ]; then
+    mkdir $out_dir/${sub}
+fi
+
+#code
+for i in `cat  ${networks_dir}/networks.txt`
+do 
+net_mif=$(ls ${in_dir4}/${i%.*}.mif)
+#get BSnet_trk FA
+bsnet_tdi=$(ls ${in_dir4}/BS_${i%.*}_tdi.nii)
+bsnet_tdimask=$out_dir/${sub}/BS_${i%.*}_tdimask.nii.gz
+fslmaths $bsnet_tdi -bin $bsnet_tdimask
+echo BS_${i%.*}_FA >>$out_dir/${sub}_FA.txt
+fslmeants -i $fa -m $bsnet_tdimask >>$out_dir/${sub}_FA.txt
+echo BS_${i%.*}_MD >>$out_dir/${sub}_FA.txt
+fslmeants -i $md -m $bsnet_tdimask >>$out_dir/${sub}_FA.txt
+#get BSnet_trk lesion volume
+bsnet_les=$out_dir/${sub}/BS_${i%.*}_Lesion.nii
+echo BS_${i%.*}_Lesion_volume >>${out_dir}/${sub}_FA.txt
+3dresample -master $dwi -prefix $out_dir/${sub}/les_${i%.*}_redwi_MNI.nii -inset $les
+les_redwi=$(ls $out_dir/${sub}/les_${i%.*}_redwi_MNI.nii)
+fslmaths $bsnet_tdimask -mul $les_redwi $bsnet_les
+fslstats $bsnet_les -V >>${out_dir}/${sub}_FA.txt
+for j in `cat  ${trksmask_dir}/trksmask.txt`
+do
+tcknet_tdi=$(ls ${in_dir4}/${j%%.*}_${i%.*}_tdi.nii)
+tcknet_tdimask=$out_dir/${sub}/${j%%.*}_${i%.*}_tdimask.nii.gz
+fslmaths $tcknet_tdi -bin $tcknet_tdimask
+#get tcknet_trk FA
+echo ${j%%.*}_${i%.*}_FA >>$out_dir/${sub}_FA.txt
+fslmeants -i $fa -m $tcknet_tdimask >>$out_dir/${sub}_FA.txt
+echo ${j%%.*}_${i%.*}_MD >>$out_dir/${sub}_FA.txt
+fslmeants -i $md -m $tcknet_tdimask >>$out_dir/${sub}_FA.txt
+#get tcknet_trk lesion volume
+tcknet_les=$out_dir/${sub}/${j%%.*}_${i%.*}_Lesion.nii
+echo ${j%%.*}_${i%.*}_Lesion_volume >>${out_dir}/${sub}_FA.txt
+fslmaths $tcknet_tdimask -mul $les_redwi $tcknet_les
+fslstats $tcknet_les -V >>${out_dir}/${sub}_FA.txt
+done
+done
